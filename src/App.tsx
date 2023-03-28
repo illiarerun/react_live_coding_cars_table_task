@@ -1,5 +1,5 @@
-import React from 'react';
-// import carsFromServer from './api/cars';
+import React, { useState } from 'react';
+import carsFromServer from './api/cars';
 // import colorsFromServer from './api/colors';
 
 // 1. Render car with color
@@ -7,12 +7,41 @@ import React from 'react';
 // 3. Add ability to filter car by color
 
 export const App: React.FC = () => {
+  const [carBrandFilter, setCarBrandFilter] = useState('');
+  const [colorFilter, setColorFilter] = useState('');
+
+  const handleColorChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setColorFilter(event.target.value);
+  };
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => (
+    setCarBrandFilter(event.target.value)
+  );
+
+  const filteredCars = carsFromServer.filter((car) => (
+    car.brand.toLowerCase().includes(carBrandFilter.toLowerCase())
+  ));
+
   return (
     <div>
-      <input type="search" placeholder="Find by car brand" />
+      <input
+        type="search"
+        placeholder="Find by car brand"
+        value={carBrandFilter}
+        onChange={handleFilterChange}
+      />
 
-      <select>
-        <option>Chose a color</option>
+      <select
+        value={colorFilter}
+        onChange={handleColorChange}
+      >
+
+        {/* {colorsFromServer.map(color => (
+          <option key={color} value={color}>
+            {color}
+          </option>
+        ))} */}
+
       </select>
 
       <table>
@@ -25,24 +54,23 @@ export const App: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Ferarri</td>
-            <td style={{ color: 'red' }}>Red</td>
-            <td>500</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Opel</td>
-            <td style={{ color: 'white' }}>White</td>
-            <td>300</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Audi</td>
-            <td style={{ color: 'black' }}>Black</td>
-            <td>300</td>
-          </tr>
+          {filteredCars.map(car => {
+            const {
+              id,
+              brand,
+              rentPrice,
+            } = car;
+
+            return (
+              <tr>
+                <td>{id}</td>
+                <td>{brand}</td>
+                <td style={{ color: 'red' }}>Red</td>
+                <td>{rentPrice}</td>
+              </tr>
+            );
+          })}
+
         </tbody>
       </table>
     </div>
