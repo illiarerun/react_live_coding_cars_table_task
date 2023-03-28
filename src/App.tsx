@@ -1,15 +1,40 @@
-import React from 'react';
-// import carsFromServer from './api/cars';
-// import colorsFromServer from './api/colors';
+import React, { ChangeEvent, useState } from 'react';
+import carsFromServer from './api/cars';
+import colorsFromServer from './api/colors';
+import { Cars } from './types/Cars';
 
 // 1. Render car with color
 // 2. Add ability to filter car by brand name
 // 3. Add ability to filter car by color
 
+const carsWithColor: Cars[] = carsFromServer.map(car => ({
+  ...car,
+  color: colorsFromServer.find(color => color.id === car.colorId)?.name,
+}));
+
+const containsQuery = (brand: string, searchingTerm: string): boolean => {
+  return brand.toLowerCase().includes(searchingTerm.toLowerCase().trim());
+};
+
 export const App: React.FC = () => {
+  const [query, setQuery] = useState('');
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.currentTarget.value);
+  };
+
+  const visibleBrands = carsWithColor.filter(car => (
+    containsQuery(car.brand, query)
+  ));
+
   return (
     <div>
-      <input type="search" placeholder="Find by car brand" />
+      <input
+        value={query}
+        onChange={handleInputChange}
+        type="search"
+        placeholder="Find by car brand"
+      />
 
       <select>
         <option>Chose a color</option>
@@ -25,24 +50,20 @@ export const App: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Ferarri</td>
-            <td style={{ color: 'red' }}>Red</td>
-            <td>500</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Opel</td>
-            <td style={{ color: 'white' }}>White</td>
-            <td>300</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Audi</td>
-            <td style={{ color: 'black' }}>Black</td>
-            <td>300</td>
-          </tr>
+          {visibleBrands.map(({
+            brand,
+            id,
+            rentPrice,
+            color,
+          }) => (
+            <tr key={id}>
+              <td>{id}</td>
+              <td>{brand}</td>
+              <td style={{ color: `${color}` }}>{color}</td>
+              <td>{rentPrice}</td>
+            </tr>
+          ))}
+
         </tbody>
       </table>
     </div>
