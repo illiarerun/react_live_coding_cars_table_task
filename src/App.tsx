@@ -15,47 +15,38 @@ const carsWithColor = carsFromServer.map(car => ({
   color: getColorById(car.colorId),
 }));
 
-// 1. Render car with color
-// 2. Add ability to filter car by brand name
-// 3. Add ability to filter car by color
-
 export const App: React.FC = () => {
-  const [listOfCars, setListOfCars] = useState(carsWithColor);
   const [words, setWords] = useState('');
-  // const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedColor, setSelectedColor] = useState(0);
 
-  // const handleClickOnColor = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const { value } = event.target;
-  //   const filtered = listOfCars.filter(car => (
-  //     car.color?.name
-  //   ));
+  let visibleCars = [...carsWithColor];
 
-  //   setSelectedColor();
-  // };
+  const handleClickOnColor = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+
+    setSelectedColor(+value);
+  };
+
+  if (selectedColor) {
+    visibleCars = visibleCars.filter(car => (
+      car.color?.id === selectedColor
+    ));
+  }
 
   const handleClickInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const filtered = listOfCars.filter(car => {
+
+    setWords(value);
+  };
+
+  if (words) {
+    visibleCars = visibleCars.filter(car => {
       const loverCaseBrand = car.brand.toLowerCase();
       const loverCaseWords = words.toLowerCase();
 
       return loverCaseBrand.includes(loverCaseWords);
     });
-
-    setWords(value);
-    setListOfCars(filtered);
-  };
-
-  // const filterByInput = () => {
-  //   const filtered = listOfCars.filter(car => {
-  //     const loverCaseBrand = car.brand.toLowerCase();
-  //     const loverCaseWords = words.toLowerCase();
-
-  //     return loverCaseBrand.includes(loverCaseWords);
-  //   });
-
-  //   return filtered;
-  // };
+  }
 
   return (
     <div>
@@ -70,10 +61,10 @@ export const App: React.FC = () => {
         value={selectedColor}
         onChange={handleClickOnColor}
       >
-        <option id="0" disabled>Chose a color</option>
+        <option value="0" disabled>Chose a color</option>
         {colorsFromServer.map(color => (
           <option
-            id={String(color.id)}
+            value={color.id}
             key={color.id}
           >
             {color.name}
@@ -91,7 +82,7 @@ export const App: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {listOfCars.map(car => (
+          {visibleCars.map(car => (
             <tr>
               <td>{car.id}</td>
               <td>{car.brand}</td>
