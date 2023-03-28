@@ -30,18 +30,18 @@ export const App: React.FC = () => {
   const [state, setState] = useState(carsWithColor);
   const [query, setQuery] = useState('');
 
-  useEffect(() => {
-    const filteredByBrand = () => {
-      state.filter(car => {
-        const lowerCasedBrand = car.brand.toLowerCase();
-        const lowerCasedQuery = query.toLowerCase();
+  // useEffect(() => {
+  //   const filteredByBrand = () => {
+  //     state.filter(car => {
+  //       const lowerCasedBrand = car.brand.toLowerCase();
+  //       const lowerCasedQuery = query.toLowerCase();
 
-        return lowerCasedBrand.includes(lowerCasedQuery);
-      });
-    };
+  //       return lowerCasedBrand.includes(lowerCasedQuery);
+  //     });
+  //   };
 
-    setState(filteredByBrand);
-  }, [query]);
+  //   setState(filteredByBrand);
+  // }, [query]);
 
   return (
     <div>
