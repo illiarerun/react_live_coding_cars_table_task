@@ -1,18 +1,75 @@
-import React from 'react';
-// import carsFromServer from './api/cars';
-// import colorsFromServer from './api/colors';
+import React, { useState } from 'react';
+import carsFromServer from './api/cars';
+import colorsFromServer from './api/colors';
 
-// 1. Render car with color
-// 2. Add ability to filter car by brand name
-// 3. Add ability to filter car by color
+const getColorById = (colorId: number) => {
+  const findedColor = colorsFromServer.find(color => (
+    color.id === colorId
+  ));
+
+  return findedColor || null;
+};
+
+const carsWithColor = carsFromServer.map(car => ({
+  ...car,
+  color: getColorById(car.colorId),
+}));
 
 export const App: React.FC = () => {
+  const [words, setWords] = useState('');
+  const [selectedColor, setSelectedColor] = useState(0);
+
+  let visibleCars = [...carsWithColor];
+
+  const handleClickOnColor = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+
+    setSelectedColor(+value);
+  };
+
+  if (selectedColor) {
+    visibleCars = visibleCars.filter(car => (
+      car.color?.id === selectedColor
+    ));
+  }
+
+  const handleClickInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    setWords(value);
+  };
+
+  if (words) {
+    visibleCars = visibleCars.filter(car => {
+      const loverCaseBrand = car.brand.toLowerCase();
+      const loverCaseWords = words.toLowerCase();
+
+      return loverCaseBrand.includes(loverCaseWords);
+    });
+  }
+
   return (
     <div>
-      <input type="search" placeholder="Find by car brand" />
+      <input
+        type="search"
+        placeholder="Find by car brand"
+        value={words}
+        onChange={handleClickInput}
+      />
 
-      <select>
-        <option>Chose a color</option>
+      <select
+        value={selectedColor}
+        onChange={handleClickOnColor}
+      >
+        <option value="0" disabled>Chose a color</option>
+        {colorsFromServer.map(color => (
+          <option
+            value={color.id}
+            key={color.id}
+          >
+            {color.name}
+          </option>
+        ))}
       </select>
 
       <table>
@@ -25,24 +82,14 @@ export const App: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Ferarri</td>
-            <td style={{ color: 'red' }}>Red</td>
-            <td>500</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Opel</td>
-            <td style={{ color: 'white' }}>White</td>
-            <td>300</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Audi</td>
-            <td style={{ color: 'black' }}>Black</td>
-            <td>300</td>
-          </tr>
+          {visibleCars.map(car => (
+            <tr>
+              <td>{car.id}</td>
+              <td>{car.brand}</td>
+              <td style={{ color: car.color?.name }}>{car.color?.name}</td>
+              <td>{car.rentPrice}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
