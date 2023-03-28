@@ -6,7 +6,41 @@ import React from 'react';
 // 2. Add ability to filter car by brand name
 // 3. Add ability to filter car by color
 
+// interface Car {
+//   id: number,
+//   brand: string,
+//   rentPrice: number,
+//   colorId: number,
+// }
+
+// interface Color {
+//   id: number,
+//   name: string,
+// }
+
+// const getColorById = (colorId: number) => colorsFromServer
+//   .find((color) => color.id
+//   === colorId);
+
+// const cars = carsFromServer.map((car) => {
+//   const color = getColorById(car.colorId);
+
+//   return {
+//     ...car,
+//     color,
+//   };
+// });
+
+// const filteredCars = (brandName) => {
+//   cars.filter((car) => {
+//     return car.brand === brandName;
+//   });
+// };
+
 export const App: React.FC = () => {
+  // const [currentCars, setCurrentCars] = useState(cars);
+  // const [brandName, setBrandName] = useState('');
+
   return (
     <div>
       <input type="search" placeholder="Find by car brand" />
@@ -25,24 +59,23 @@ export const App: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Ferarri</td>
-            <td style={{ color: 'red' }}>Red</td>
-            <td>500</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Opel</td>
-            <td style={{ color: 'white' }}>White</td>
-            <td>300</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Audi</td>
-            <td style={{ color: 'black' }}>Black</td>
-            <td>300</td>
-          </tr>
+          {/* {cars.map((currCar) => {
+            const { car, colorCar } = currCar;
+
+            return (
+              <tr>
+                <td>{car.id}</td>
+                <td>{car.brand}</td>
+                <td style={{
+                  color: colorCar.name,
+                }}
+                >
+                  {colorCar.name}
+                </td>
+                <td>{car.rentPrice}</td>
+              </tr>
+            );
+          })} */}
         </tbody>
       </table>
     </div>
