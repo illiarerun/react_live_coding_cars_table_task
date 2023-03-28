@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import carsFromServer from './api/cars';
-// import colorsFromServer from './api/colors';
+import colorsFromServer from './api/colors';
 
 // 1. Render car with color
 // 2. Add ability to filter car by brand name
@@ -36,11 +36,11 @@ export const App: React.FC = () => {
         onChange={handleColorChange}
       >
 
-        {/* {colorsFromServer.map(color => (
-          <option key={color} value={color}>
-            {color}
+        {colorsFromServer.map(color => (
+          <option key={color.id} value={color.name}>
+            {color.name}
           </option>
-        ))} */}
+        ))}
 
       </select>
 
